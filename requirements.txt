@@ -1,3 +1,7 @@
-clarifai-grpc
-streamlit
-streamlit-chat
+sentence-transformers
+uvicorn
+ctransformers
+fastapi
+ipykernel
+langchain
+python-bot
