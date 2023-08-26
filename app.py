@@ -4,37 +4,44 @@ from langchain.llms import Clarifai
 
 st.set_page_config(page_title="Generate your Email!!",page_icon=":📬:")
 
-
-import streamlit as st
-
 def main():
     st.title("Email Generator")
     
+    # Create a two-column layout
+    col1, col2 = st.columns(2)
+    
     # User input for sender's name
-    sender_name = st.text_input("Sender's Name")
+    sender_name = col1.text_input("Sender's Name", key="sender_name")
     
     # User input for recipient's name
-    recipient_name = st.text_input("Recipient's Name")
+    recipient_name = col1.text_input("Recipient's Name", key="recipient_name")
     
     # User input for email subject/topic
-    subject = st.text_input("Subject/Topic")
+    subject = col1.text_input("Subject/Topic", key="subject")
+    
+    # User input for extra detail
+    extra_detail = col1.text_input("Extra Detail", key="extra_detail")
     
     # User input for email tone with dropdown
     tone_options = ['Formal', 'Casual', 'Friendly']
-    tone = st.selectbox("Tone", tone_options)
+    tone = col1.selectbox("Tone", tone_options, key="tone")
+    
+    # User input for preferred email length
+    length_options = ['Short', 'Medium', 'Long']
+    preferred_length = col1.selectbox("Preferred Length", length_options, key="preferred_length")
     
     # User input for attachments
-    attachments = st.file_uploader("Attachments", type=["pdf", "txt", "docx"], accept_multiple_files=True)
+    attachments = col1.file_uploader("Attachments", type=["pdf", "txt", "docx"], accept_multiple_files=True, key="attachments")
     
     # Create Email button
-    if st.button("Create Email"):
-        email_content = generate_email(sender_name, recipient_name, subject, tone, attachments)
-        st.write("## Email Preview")
-        st.write(email_content)
+    if col1.button("Create Email"):
+        email_content = generate_email(sender_name, recipient_name, subject, extra_detail, tone, preferred_length, attachments)
+        col2.write("## Email Preview")
+        col2.write(email_content)
 
 
 # function to generate email
-def generate_email(sender_name, recipient_name, subject, tone, attachments):
+def generate_email(sender_name, recipient_name, subject, extra_detail, tone, preferred_length, attachments):
     # Generate the email content based on user inputs
     # email_template = f"Dear {recipient_name},\n\n"
     
@@ -111,21 +118,22 @@ def generate_email(sender_name, recipient_name, subject, tone, attachments):
 
 
     # template for building the prompt
-    template = """Generate an email from {sender_name} to {recipient_name} with the following details:\nSubject: {subject}\nTone: {tone}"""
+    template = """Generate an email from {sender_name} to {recipient_name} with the following details:\nSubject: {subject}\nTone: {tone}. Consider the preferred length: {preferred_length} and details: {extra_detail}. 
+    Write it as if you are the sender. Write it in proper format."""
     
-    if attachments:
-        attachment_names = ", ".join([attachment.name for attachment in attachments])
-        prompt += f"\nAttachments: {attachment_names}"
+    # if attachments:
+    #     attachment_names = ", ".join([attachment.name for attachment in attachments])
+    #     prompt += f"\nAttachments: {attachment_names}"
 
     # creating the final prompt
     prompt=PromptTemplate(
-        input_variables=["sender_name","recipient_name","subject","tone"],
+        input_variables=["sender_name","recipient_name","subject","tone","preferred_length","extra_detail"],
         template=template,)
     
     llm=Clarifai(pat='e620301e1ebe4aa5ba634bcc668f8274',user_id='meta',app_id='Llama-2',model_id='llama2-13b-chat')
 
     # generating response using LLM
-    response=llm(prompt.format(subject=subject,sender_name=sender_name,recipient_name=recipient_name,tone=tone))
+    response=llm(prompt.format(subject=subject,sender_name=sender_name,recipient_name=recipient_name,tone=tone,preferred_length=preferred_length,extra_detail=extra_detail))
     print(response)
 
     return response
