@@ -35,7 +35,7 @@ def main():
     
     # Create Email button
     if col1.button("Create Email"):
-        if sender_name and recipient_name and subject and tone and preferred_length and attachments:
+        if sender_name and recipient_name and subject and tone and preferred_length:
             email_content = generate_email(sender_name, recipient_name, subject, extra_detail, tone, preferred_length, attachments)
             col2.write("## Email Preview")
             col2.write(email_content)
