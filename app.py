@@ -9,33 +9,33 @@ def main():
     
     
     # User input for sender's name
-    sender_name = st.text_input("Sender's Name", key="sender_name")
+    sender_name = col1.text_input("Sender's Name", key="sender_name")
     
     # User input for recipient's name
-    recipient_name = st.text_input("Recipient's Name", key="recipient_name")
+    recipient_name = col1.text_input("Recipient's Name", key="recipient_name")
     
     # User input for email subject/topic
-    subject = st.text_input("Subject/Topic", key="subject")
+    subject = col1.text_input("Subject/Topic", key="subject")
     
     # User input for extra detail
-    extra_detail = st.text_input("Extra Detail", key="extra_detail")
+    extra_detail = col1.text_input("Extra Detail", key="extra_detail")
     
     # User input for email tone with dropdown
     tone_options = ['Formal', 'Casual', 'Friendly']
-    tone = st.selectbox("Tone", tone_options, key="tone")
+    tone = col1.selectbox("Tone", tone_options, key="tone")
     
     # User input for preferred email length
     length_options = ['Short', 'Medium', 'Long']
-    preferred_length = st.selectbox("Preferred Length", length_options, key="preferred_length")
+    preferred_length = col1.selectbox("Preferred Length", length_options, key="preferred_length")
     
     # User input for attachments
-    attachments = st.file_uploader("Attachments", type=["pdf", "txt", "docx"], accept_multiple_files=True, key="attachments")
+    attachments = col1.file_uploader("Attachments", type=["pdf", "txt", "docx"], accept_multiple_files=True, key="attachments")
     
     # Create Email button
-    if st.button("Create Email"):
+    if col1.button("Create Email"):
         email_content = generate_email(sender_name, recipient_name, subject, extra_detail, tone, preferred_length, attachments)
-        st.write("## Email Preview")
-        st.write(email_content)
+        col2.write("## Email Preview")
+        col2.write(email_content)
 
 
 # function to generate email
