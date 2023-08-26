@@ -2,59 +2,66 @@ import streamlit as st
 from langchain import PromptTemplate
 from langchain.llms import Clarifai
 
-st.set_page_config(page_title="Generate your Email!!",page_icon=":📬:")
-
+st.set_page_config(page_title="Generate your Email!!", page_icon="📬",layout="wide")
 def main():
     st.title("Email Generator")
     
-    # User input for sender's name
-    sender_name = st.text_input("Sender's Name", key="sender_name", value="")
-    
-    # User input for recipient's name
-    recipient_name = st.text_input("Recipient's Name", key="recipient_name", value="")
-    
-    # User input for email subject/topic
-    subject = st.text_input("Subject/Topic", key="subject", value="")
+    # Create a two-column layout
+    col1, col2 = st.columns(2)
 
-    # User input for extra detail (optional)
-    extra_detail = st.text_input("Extra Detail", key="extra_detail", value="")
-    
-    # User input for email tone with dropdown
-    tone_options = ['Formal', 'Casual', 'Friendly']
-    tone = st.selectbox("Tone", tone_options, key="tone", index=0)
-    
-    # User input for preferred email length
-    length_options = ['Short', 'Medium', 'Long']
-    preferred_length = st.selectbox("Preferred Length", length_options, key="preferred_length", index=0)
-    
-    # User input for attachments
-    attachments = st.file_uploader("Attachments", type=["pdf", "txt", "docx"], accept_multiple_files=True, key="attachments")
+    with col1:
+        # User input for sender's name
+        sender_name = col1.text_input("Sender's Name", key="sender_name", value="")
 
-    # Create Email button
-    if st.button("Create Email"):
-        if sender_name and recipient_name and subject and tone and preferred_length and attachments:
-            email_content = generate_email(sender_name, recipient_name, subject, extra_detail, tone, preferred_length, attachments)
-            st.write("## Email Preview")
-            st.write(email_content)
-        else:
-            st.warning("Please fill in all required fields.")
-    # Validate required fields
-    if st.button("Create Email"):
-        missing_fields = []
-        if not sender_name:
-            missing_fields.append("Sender's Name")
-        if not recipient_name:
-            missing_fields.append("Recipient's Name")
-        if not subject:
-            missing_fields.append("Subject")
+        # User input for recipient's name
+        recipient_name = col1.text_input("Recipient's Name", key="recipient_name", value="")
+
+        # User input for email subject/topic
+        subject = col1.text_input("Subject/Topic", key="subject", value="")
+
+        # User input for extra detail (optional)
+        extra_detail = col1.text_input("Extra Detail", key="extra_detail", value="")
+
+        # User input for email tone with dropdown
+        tone_options = ['Formal', 'Casual', 'Friendly']
+        tone = col1.selectbox("Tone", tone_options, key="tone", index=0)
+
+        # User input for preferred email length
+        length_options = ['Short', 'Medium', 'Long']
+        preferred_length = col1.selectbox("Preferred Length", length_options, key="preferred_length", index=0)
+
+        # User input for attachments
+        attachments = col1.file_uploader("Attachments", type=["pdf", "txt", "docx"], accept_multiple_files=True, key="attachments")
         
-        if missing_fields:
-            missing_fields_str = ", ".join(missing_fields)
-            st.error(f"The following fields are required: {missing_fields_str}")
-        else:
-            email_content = generate_email(sender_name, recipient_name, subject, extra_detail, tone, preferred_length, attachments)
-            st.write("## Email Preview")
-            st.write(email_content)
+        # Create Email button
+        if col1.button("Create Email"):
+            if sender_name and recipient_name and subject and tone and preferred_length and attachments:
+                email_content = generate_email(sender_name, recipient_name, subject, extra_detail, tone, preferred_length, attachments)
+                col2.session_state.email_content = email_content
+                col2.session_state.show_preview = True
+            else:
+                col1.warning("Please fill in all required fields.")
+
+   
+
+        
+    # Validate required fields
+    # if st.button("Create Email"):
+    #     missing_fields = []
+    #     if not sender_name:
+    #         missing_fields.append("Sender's Name")
+    #     if not recipient_name:
+    #         missing_fields.append("Recipient's Name")
+    #     if not subject:
+    #         missing_fields.append("Subject")
+        
+    #     if missing_fields:
+    #         missing_fields_str = ", ".join(missing_fields)
+    #         st.error(f"The following fields are required: {missing_fields_str}")
+    #     else:
+    #         email_content = generate_email(sender_name, recipient_name, subject, extra_detail, tone, preferred_length, attachments)
+    #         st.write("## Email Preview")
+    #         st.write(email_content)
     
 
 # function to generate email
