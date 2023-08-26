@@ -2,56 +2,61 @@ import streamlit as st
 from langchain import PromptTemplate
 from langchain.llms import Clarifai
 
-st.set_page_config(page_title="Generate your Email!!",page_icon=":📬:")
+st.set_page_config(page_title="Generate your Email!!",page_icon=":📬:",layout="wide")
 
 # ...
 
 # ...
 
 def main():
-    st.title("Email Generator")
-    
     # Create a two-column layout
     col1, col2 = st.columns(2)
-    
-    # User input for sender's name
-    sender_name = col1.text_input("Sender's Name", key="sender_name", value="")
-    
-    # User input for recipient's name
-    recipient_name = col1.text_input("Recipient's Name", key="recipient_name", value="")
-    
-    # User input for email subject/topic
-    subject = col1.text_input("Subject/Topic", key="subject", value="")
-    
-     # User input for extra detail (optional)
-    extra_detail = col1.text_input("Extra Detail", key="extra_detail", value="")
+    with col1:
 
-    # User input for email tone with dropdown
-    tone_options = ['Formal', 'Casual', 'Friendly']
-    tone = col1.selectbox("Tone", tone_options, key="tone", index=0)
-    
-    # User input for preferred email length
-    length_options = ['Short', 'Medium', 'Long']
-    preferred_length = col1.selectbox("Preferred Length", length_options, key="preferred_length", index=0)
-    
-    # User input for attachments
-    attachments = col1.file_uploader("Attachments", type=["pdf", "txt", "docx"], accept_multiple_files=True, key="attachments")
-    
-   
-    
-    # Create Email button
-    if col1.button("Create Email"):
-        if sender_name and recipient_name and subject and tone and preferred_length:
-            email_content = generate_email(sender_name, recipient_name, subject, extra_detail, tone, preferred_length, attachments)
-            
+        st.title("Email Generator")
         
-            with col2:
-                st.write("## Email Preview")
-                with st.expander("Preview Box", expanded=True):
-                    st.write(email_content)
-        else:
-            st.warning("Please fill in all required fields.")
+        
+        
+        # User input for sender's name
+        sender_name = col1.text_input("Sender's Name", key="sender_name", value="")
+        
+        # User input for recipient's name
+        recipient_name = col1.text_input("Recipient's Name", key="recipient_name", value="")
+        
+        # User input for email subject/topic
+        subject = col1.text_input("Subject/Topic", key="subject", value="")
+        
+        # User input for extra detail (optional)
+        extra_detail = col1.text_input("Extra Detail", key="extra_detail", value="")
 
+        # User input for email tone with dropdown
+        tone_options = ['Formal', 'Casual', 'Friendly']
+        tone = col1.selectbox("Tone", tone_options, key="tone", index=0)
+        
+        # User input for preferred email length
+        length_options = ['Short', 'Medium', 'Long']
+        preferred_length = col1.selectbox("Preferred Length", length_options, key="preferred_length", index=0)
+        
+        # User input for attachments
+        attachments = col1.file_uploader("Attachments", type=["pdf", "txt", "docx"], accept_multiple_files=True, key="attachments")
+    
+    with col2:
+        col2.title("Email Preview")
+
+    with col1:
+        # Create Email button
+        if col1.button("Create Email"):
+            if sender_name and recipient_name and subject and tone and preferred_length:
+                email_content = generate_email(sender_name, recipient_name, subject, extra_detail, tone, preferred_length, attachments)
+                with col2:
+                    with st.expander("Preview Box", expanded=True):
+                        st.write(email_content)
+            else:
+                st.warning("Please fill in all required fields.")
+                
+        
+    
+        
 # ...
 
 # ...
