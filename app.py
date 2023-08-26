@@ -34,8 +34,8 @@ def main():
     # Create Email button
     if st.button("Create Email"):
         email_content = generate_email(sender_name, recipient_name, subject, extra_detail, tone, preferred_length, attachments)
-        col2.write("## Email Preview")
-        col2.write(email_content)
+        st.write("## Email Preview")
+        st.write(email_content)
 
 
 # function to generate email
