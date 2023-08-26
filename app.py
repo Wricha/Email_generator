@@ -37,8 +37,10 @@ def main():
         if col1.button("Create Email"):
             if sender_name and recipient_name and subject and tone and preferred_length and attachments:
                 email_content = generate_email(sender_name, recipient_name, subject, extra_detail, tone, preferred_length, attachments)
-                col2.session_state.email_content = email_content
-                col2.session_state.show_preview = True
+                with col2:
+                st.write("## Email Preview")
+                with st.expander("Preview Box", expanded=True):
+                    st.write(email_content)
             else:
                 col1.warning("Please fill in all required fields.")
 
