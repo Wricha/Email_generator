@@ -4,10 +4,6 @@ from langchain.llms import Clarifai
 
 st.set_page_config(page_title="Generate your Email!!",page_icon=":📬:",layout="wide")
 
-# ...
-
-# ...
-
 def main():
     # Create a two-column layout
     col1, col2 = st.columns(2)
@@ -54,31 +50,10 @@ def main():
             else:
                 st.warning("Please fill in all required fields.")
                 
-        
-    
-        
-# ...
-
-# ...
-
 
 
 # function to generate email
 def generate_email(sender_name, recipient_name, subject, extra_detail, tone, preferred_length, attachments):
-    # Generate the email content based on user inputs
-    # email_template = f"Dear {recipient_name},\n\n"
-    
-    # if tone == 'Formal':
-    #     email_template += "I hope this email finds you well. "
-    # elif tone == 'Casual':
-    #     email_template += "Hey there, hope you're doing great! "
-    # else:
-    #     email_template += "Hi, just wanted to drop you a quick note. "
-    
-    # email_template += f"I wanted to discuss the topic of '{subject}'. "
-    # email_template += "Please find the attached files for your reference.\n\n"
-    
-    # email_template += f"Best regards,\n{sender_name}"
 
     
     ######################################################################################################
@@ -142,11 +117,15 @@ def generate_email(sender_name, recipient_name, subject, extra_detail, tone, pre
 
     # template for building the prompt
     template = """Generate an email from {sender_name} to {recipient_name} with the following details:\nSubject: {subject}\nTone: {tone}. Consider the preferred length: {preferred_length} and details: {extra_detail}. 
-    Write it as if you are the sender. Write it in proper format."""
+    Write it as if you are the sender. Be sure to write {recipient_name} in the salutation and {sender_name} in the valediction. Write it in proper format."""
     
     # if attachments:
     #     attachment_names = ", ".join([attachment.name for attachment in attachments])
-    #     prompt += f"\nAttachments: {attachment_names}"
+    #     template += f"\nAttachments: {attachment_names}"
+
+    if attachments:
+        attachment_list = ", ".join([attachment.name for attachment in attachments])
+        template += f"Be sure to attach all the files provided at the end of the email"
 
     # creating the final prompt
     prompt=PromptTemplate(
