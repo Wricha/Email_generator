@@ -4,4 +4,3 @@ ctransformers
 fastapi
 ipykernel
 langchain
-python-bot

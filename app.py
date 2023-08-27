@@ -136,11 +136,12 @@ def generate_email(sender_name, recipient_name, subject, extra_detail, tone, pre
 
     # template for building the prompt
     template = """Generate an email from {sender_name} to {recipient_name} with the following details:\nSubject: {subject}\n. Write it in a {tone} way. Make it {preferred_length} length and add details: {extra_detail}. 
-    Write it in a proper format of a letter. Just write the email as if you are the one sending it. Make sure there are no repeated sentences."""
-    
+    Write it in a proper format of a letter. Just write the email as if you are the one sending it. Make sure there are no repeated sentences. """
+ 
     if attachments:
         attachment_names = ", ".join([attachment.name for attachment in attachments])
-        template += f"\nAttachments: {attachment_names}"
+        attachment_list = "\nAttachments: " + attachment_names  # Include a new line at the beginning
+        template += attachment_list
 
     # if attachments:
     #     attachment_list = ", ".join([attachment.name for attachment in attachments])
@@ -156,6 +157,7 @@ def generate_email(sender_name, recipient_name, subject, extra_detail, tone, pre
     # generating response using LLM
     response=llm(prompt.format(subject=subject,sender_name=sender_name,recipient_name=recipient_name,tone=tone,preferred_length=preferred_length,extra_detail=extra_detail))
     print(response)
+
 
     return response
     
