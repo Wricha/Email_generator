@@ -2,7 +2,7 @@ import streamlit as st
 from langchain import PromptTemplate
 from langchain.llms import Clarifai
 import urllib.parse
-import webbrowser
+from urllib.parse import quote
 
 st.set_page_config(page_title="Generate your Email!!",page_icon=":📬:",layout="wide")
 
@@ -50,18 +50,24 @@ def main():
                     with st.expander("Preview Box", expanded=True):
                         st.write(email_content)
                         if email_content:
-                            email_link = generate_email_link(sender_name,recipient_name, subject, email_content)
-                            st.markdown(f"[Open with Email Client]({email_link})")
+                            email_links = generate_email_links(recipient_name, subject, email_content)
+                            mail_link, gmail_link=email_links
+                            st.markdown(f"[Open with Email Client]({mail_link})")
+                            st.markdown(f"[Open with Gmail]({gmail_link})")
             else:
                 st.warning("Please fill in all required fields.")
                 
-def generate_email_link(sender_name, recipient_name, subject, email_content):
-    email_subject = urllib.parse.quote(subject)
-    email_body = urllib.parse.quote(email_content)
-    # Construct the email link for Outlook
-    outlook_link = f"mailto:{recipient_name}?subject={email_subject}&body={email_body}"
+def generate_email_links(recipient_name, subject, email_content):
+    encoded_subject = urllib.parse.quote(subject)
+    encoded_body = urllib.parse.quote(email_content)
 
-    return outlook_link
+    mail_link = f"mailto:{recipient_name}?subject={encoded_subject}&body={encoded_body}"
+
+    gmail_link = f"https://mail.google.com/mail/?view=cm&su={encoded_subject}&body={encoded_body}"
+
+
+    return mail_link,gmail_link
+
 
 
 
@@ -129,7 +135,7 @@ def generate_email(sender_name, recipient_name, subject, extra_detail, tone, pre
 
 
     # template for building the prompt
-    template = """Generate an email from {sender_name} to {recipient_name} with the following details:\nSubject: {subject}\n. Write it in a {tone} way. Consider the preferred length: {preferred_length} and details: {extra_detail}. 
+    template = """Generate an email from {sender_name} to {recipient_name} with the following details:\nSubject: {subject}\n. Write it in a {tone} way. Make it {preferred_length} length and add details: {extra_detail}. 
     Write it in a proper format of a letter. Just write the email as if you are the one sending it. Make sure there are no repeated sentences."""
     
     if attachments:
