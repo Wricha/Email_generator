@@ -143,9 +143,6 @@ def generate_email(sender_name, recipient_name, subject, extra_detail, tone, pre
         attachment_list = "\nAttachments: " + attachment_names  # Include a new line at the beginning
         template += attachment_list
 
-    # if attachments:
-    #     attachment_list = ", ".join([attachment.name for attachment in attachments])
-    #     template += f"Attach the {attachment_list} in attachment at the end of the mail"
 
     # creating the final prompt
     prompt=PromptTemplate(
